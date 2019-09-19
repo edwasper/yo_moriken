@@ -41,7 +41,6 @@ def measure_time():
         while True:
             val = gloarg
             if sit_flag :
-                sit_count += 1
                 if val < sit_ref:
                     sit_flag = False
                     tail = datetime.now()
@@ -51,10 +50,7 @@ def measure_time():
                             sittime[sit_time.index(tmp)] = tmp + 60
                     if sit_time[0] >48 :
                         sit_time[0] -= 48
-
-                    print("sit_count:",sit_count)
                     print("sit_time:",sit_time)
-                    sit_count = 0
             else :
                 if val > sit_ref:
                     sit_flag = True
@@ -65,6 +61,7 @@ def measure_time():
         print("emergency_timer")
 
 timer_thread = threading.Thread(target = measure_time)
+timer_thread.daemon = True
 timer_thread.start()
 
 try :
