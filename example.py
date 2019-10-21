@@ -1,7 +1,7 @@
 #! /usr/bin/python2
 import matplotlib.pyplot as plt
 import math
-import numpy np
+import numpy as np
 import time
 import sys
 
@@ -101,7 +101,6 @@ while True:
             else:
                 while(f_len != plot_count):
                     plot_count -= 1
-        plt.plot(plot_count,f_plot_list)
-        plt.show()
+        plt.plot(range(plot_count),f_plot_list)
 
         cleanAndExit()
