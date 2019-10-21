@@ -1,5 +1,7 @@
 #! /usr/bin/python2
-
+import matplotlib.pyplot as plt
+import math
+import numpy np
 import time
 import sys
 
@@ -55,6 +57,10 @@ print("Tare done! Add weight now...")
 #hx.tare_A()
 #hx.tare_B()
 
+f_plot_list = []
+b_plot_list = []
+plot_count = 0
+
 while True:
     try:
         # These three lines are usefull to debug wether to use MSB or LSB in the reading formats
@@ -66,10 +72,13 @@ while True:
         # print binary_string + " " + np_arr8_string
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
-        f_val = f_hx.get_weight(5)
-        b_val = b_hx.get_weight(5)
-        print("front_roadcell:",f_val)
-        print("back_roadcell:",b_val)
+        f_plot_list.append(f_hx.get_weight(5))
+        b_plot_list.append(b_hx.get_weight(5))
+
+        print("front_roadcell:",f_plot_list[plot_count])
+        print("back_roadcell:",b_plot_list[plot_count])
+
+        plot_count += 1
 
         # To get weight from both channels (if you have load cells hooked up 
         # to both channel A and B), do something like this
@@ -84,4 +93,15 @@ while True:
         time.sleep(0.1)
 
     except (KeyboardInterrupt, SystemExit):
+        f_len = len(f_plot_list)
+        if f_len != plot_count:
+            if f_len > plot_count:
+                while(f_len != plot_count):
+                    plot_count += 1
+            else:
+                while(f_len != plot_count):
+                    plot_count -= 1
+        plt.plot(plot_count,f_plot_list)
+        plt.show()
+
         cleanAndExit()
