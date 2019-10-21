@@ -22,8 +22,8 @@ def cleanAndExit():
     print("Bye!")
     sys.exit()
 
-hx = HX711(5, 6)
-
+f_hx = HX711(5, 6)
+b_hx = HX711(23,24)
 # I've found out that, for some reason, the order of the bytes is not always the same between versions of python, numpy and the hx711 itself.
 # Still need to figure out why does it change.
 # If you're experiencing super random values, change these values to MSB or LSB until to get more stable values.
@@ -31,7 +31,8 @@ hx = HX711(5, 6)
 # The first parameter is the order in which the bytes are used to build the "long" value.
 # The second paramter is the order of the bits inside each byte.
 # According to the HX711 Datasheet, the second parameter is MSB so you shouldn't need to modify it.
-hx.set_reading_format("MSB", "MSB")
+f_hx.set_reading_format("MSB", "MSB")
+b_hx.set_reading_format("MSB", "MSB")
 
 # HOW TO CALCULATE THE REFFERENCE UNIT
 # To set the reference unit to 1. Put 1kg on your sensor or anything you have and know exactly how much it weights.
@@ -39,11 +40,14 @@ hx.set_reading_format("MSB", "MSB")
 # and I got numbers around 184000 when I added 2kg. So, according to the rule of thirds:
 # If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
 #hx.set_reference_unit(113)
-hx.set_reference_unit(referenceUnit)
+f_hx.set_reference_unit(referenceUnit)
+b_hx.set_reference_unit(referenceUnit)
 
-hx.reset()
+f_hx.reset()
+b_hx.reset()
 
-hx.tare()
+f_hx.tare()
+b_hx.tare()
 
 print("Tare done! Add weight now...")
 
@@ -62,8 +66,10 @@ while True:
         # print binary_string + " " + np_arr8_string
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
-        val = hx.get_weight(5)
-        print(val)
+        f_val = f_hx.get_weight(5)
+        b_val = b_hx.get_weight(5)
+        print("front_roadcell:",f_val)
+        print("back_roadcell:",b_val)
 
         # To get weight from both channels (if you have load cells hooked up 
         # to both channel A and B), do something like this
@@ -71,8 +77,10 @@ while True:
         #val_B = hx.get_weight_B(5)
         #print "A: %s  B: %s" % ( val_A, val_B )
 
-        hx.power_down()
-        hx.power_up()
+        f_hx.power_down()
+        b_hx.power_down()
+        f_hx.power_up()
+        b_hx.power_up()
         time.sleep(0.1)
 
     except (KeyboardInterrupt, SystemExit):
