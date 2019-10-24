@@ -7,7 +7,8 @@ import sys
 
 EMULATE_HX711=False
 
-referenceUnit = 1
+f_referenceUnit = 2.9
+b_referenceUnit = 1
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
@@ -23,6 +24,19 @@ def cleanAndExit():
         
     print("Bye!")
     sys.exit()
+
+
+def set_count(plot_list):
+    global plot_count
+    l_len = len(plot_list)
+        if l_len != plot_count:
+            if l_len > plot_count:
+                while(l_len != plot_count):
+                    plot_count += 1
+            else:
+                while(l_len != plot_count):
+                    plot_count -= 1
+
 
 f_hx = HX711(5, 6)
 b_hx = HX711(23,24)
@@ -42,8 +56,8 @@ b_hx.set_reading_format("MSB", "MSB")
 # and I got numbers around 184000 when I added 2kg. So, according to the rule of thirds:
 # If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
 #hx.set_reference_unit(113)
-f_hx.set_reference_unit(referenceUnit)
-b_hx.set_reference_unit(referenceUnit)
+f_hx.set_reference_unit(f_referenceUnit)
+b_hx.set_reference_unit(b_referenceUnit)
 
 f_hx.reset()
 b_hx.reset()
@@ -72,8 +86,8 @@ while True:
         # print binary_string + " " + np_arr8_string
         
         # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
-        f_plot_list.append(f_hx.get_weight(5))
-        b_plot_list.append(b_hx.get_weight(5))
+        f_plot_list.append(abs(f_hx.get_weight(5)))
+        b_plot_list.append(abs(b_hx.get_weight(5)))
 
         print("front_roadcell:",f_plot_list[plot_count])
         print("back_roadcell:",b_plot_list[plot_count])
@@ -93,14 +107,22 @@ while True:
         time.sleep(0.1)
 
     except (KeyboardInterrupt, SystemExit):
-        f_len = len(f_plot_list)
-        if f_len != plot_count:
-            if f_len > plot_count:
-                while(f_len != plot_count):
-                    plot_count += 1
-            else:
-                while(f_len != plot_count):
-                    plot_count -= 1
+        if len(f_plot_list) == len(b_plot_list):
+            set_count(f_plot_list)
+        elif len(f_plot_list) > len(b_plot_list):
+            while(len(f_plot_list) > len(b_plot_list)):
+                del f_plot_list[len(f_plot_list)-1] 
+            set_count(f_plot_list)
+        else len(f_plot_list) < len(b_plot_list):
+            while(len(f_plot_list) < len(b_plot_list)):
+                del b_plot_list[len(b_plot_list)-1]
+            set_count(f_plot_list)
+
+        plt.plot(range(plot_count),b_plot_list)
         plt.plot(range(plot_count),f_plot_list)
+        plt.title('Pressure applied during measurement') 
+        plt.xlabel('over time')
+        plt.ylabel('pressure')
+        plt.show()
 
         cleanAndExit()
