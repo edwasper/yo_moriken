@@ -29,13 +29,13 @@ def cleanAndExit():
 def set_count(plot_list):
     global plot_count
     l_len = len(plot_list)
-        if l_len != plot_count:
-            if l_len > plot_count:
-                while(l_len != plot_count):
-                    plot_count += 1
-            else:
-                while(l_len != plot_count):
-                    plot_count -= 1
+    if l_len != plot_count:
+        if l_len > plot_count:
+            while(l_len != plot_count):
+                plot_count += 1
+        else:
+            while(l_len != plot_count):
+                plot_count -= 1
 
 
 f_hx = HX711(5, 6)
@@ -75,8 +75,8 @@ f_plot_list = []
 b_plot_list = []
 plot_count = 0
 
-while True:
-    try:
+try:
+    while plot_count<600 :
         # These three lines are usefull to debug wether to use MSB or LSB in the reading formats
         # for the first parameter of "hx.set_reading_format("LSB", "MSB")".
         # Comment the two lines "val = hx.get_weight(5)" and "print val" and uncomment these three lines to see what it prints.
@@ -105,24 +105,25 @@ while True:
         f_hx.power_up()
         b_hx.power_up()
         time.sleep(0.1)
+except :
+    pass
+finally :
+    if len(f_plot_list) == len(b_plot_list):
+	set_count(f_plot_list)
+    elif len(f_plot_list) > len(b_plot_list):
+	while(len(f_plot_list) > len(b_plot_list)):
+	    del f_plot_list[len(f_plot_list)-1] 
+	set_count(f_plot_list)
+    elif len(f_plot_list) < len(b_plot_list):
+	while(len(f_plot_list) < len(b_plot_list)):
+	    del b_plot_list[len(b_plot_list)-1]
+	set_count(f_plot_list)
 
-    except (KeyboardInterrupt, SystemExit):
-        if len(f_plot_list) == len(b_plot_list):
-            set_count(f_plot_list)
-        elif len(f_plot_list) > len(b_plot_list):
-            while(len(f_plot_list) > len(b_plot_list)):
-                del f_plot_list[len(f_plot_list)-1] 
-            set_count(f_plot_list)
-        else len(f_plot_list) < len(b_plot_list):
-            while(len(f_plot_list) < len(b_plot_list)):
-                del b_plot_list[len(b_plot_list)-1]
-            set_count(f_plot_list)
-
-        plt.plot(range(plot_count),b_plot_list)
-        plt.plot(range(plot_count),f_plot_list)
-        plt.title('Pressure applied during measurement') 
-        plt.xlabel('over time')
-        plt.ylabel('pressure')
-        plt.show()
+    plt.plot(range(plot_count),b_plot_list)
+    plt.plot(range(plot_count),f_plot_list)
+    plt.title('Pressure applied during measurement') 
+    plt.xlabel('over time')
+    plt.ylabel('pressure')
+    plt.show()
 
         cleanAndExit()
