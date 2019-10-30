@@ -77,15 +77,6 @@ plot_count = 0
 
 try:
     while plot_count<600 :
-        # These three lines are usefull to debug wether to use MSB or LSB in the reading formats
-        # for the first parameter of "hx.set_reading_format("LSB", "MSB")".
-        # Comment the two lines "val = hx.get_weight(5)" and "print val" and uncomment these three lines to see what it prints.
-        
-        # np_arr8_string = hx.get_np_arr8_string()
-        # binary_string = hx.get_binary_string()
-        # print binary_string + " " + np_arr8_string
-        
-        # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
         f_plot_list.append(abs(f_hx.get_weight(5)))
         b_plot_list.append(abs(b_hx.get_weight(5)))
 
@@ -118,6 +109,17 @@ finally :
 	while(len(f_plot_list) < len(b_plot_list)):
 	    del b_plot_list[len(b_plot_list)-1]
 	set_count(f_plot_list)
+    
+
+    inp = raw_input("please input file name\n")
+    f_csv = '\n'.join(f_plot_list)
+    b_csv = '\n'.join(b_plot_list)
+    with open(inp + "_f.csv",'wt') as f:
+	f.write(f_csv)
+
+    with open(inp + "_b.csv",'wt') as f:
+	f.write(b_csv)
+
 
     plt.plot(range(plot_count),b_plot_list)
     plt.plot(range(plot_count),f_plot_list)
@@ -126,4 +128,6 @@ finally :
     plt.ylabel('pressure')
     plt.show()
 
-        cleanAndExit()
+    cleanAndExit()
+
+
