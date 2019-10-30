@@ -126,6 +126,7 @@ finally :
     plt.title('Pressure applied during measurement') 
     plt.xlabel('over time')
     plt.ylabel('pressure')
+    plt.ylim(0,30000)
     plt.show()
 
     cleanAndExit()
