@@ -122,9 +122,9 @@ finally :
     inp = raw_input("please input file name\n")
     with open(inp + ".csv",'wt') as f:
         for i in range(keisu):
-	    f.write(f_nomal[i])
+	    f.write(str(f_nomal[i]))
             f.write(',')
-            f.write(b_nomal[i])
+            f.write(str(b_nomal[i]))
             f.write('\n')
 
 
@@ -172,7 +172,7 @@ try:
 except :
     pass
 finally :
-    if len(f_slouch) == len(b_slouch)):
+    if len(f_slouch) == len(b_slouch):
 	set_count(f_slouch)
     elif len(f_slouch) > len(b_slouch):
 	while(len(f_slouch) > len(b_slouch)):
@@ -187,9 +187,9 @@ finally :
     inp = raw_input("please input file name\n")
     with open(inp + ".csv",'wt') as f:
         for i in range(keisu):
-	    f.write(f_slouch[i])
+	    f.write(str(f_slouch[i]))
             f.write(',')
-            f.write(b_slouch[i])
+            f.write(str(b_slouch[i]))
             f.write('\n')
 
 
@@ -238,7 +238,7 @@ try:
 except :
     pass
 finally :
-    if len(f_warp) == len(b_warp)):
+    if len(f_warp) == len(b_warp):
 	set_count(f_warp)
     elif len(f_warp) > len(b_warp):
 	while(len(f_warp) > len(b_warp)):
@@ -253,9 +253,9 @@ finally :
     inp = raw_input("please input file name\n")
     with open(inp + ".csv",'wt') as f:
         for i in range(keisu):
-	    f.write(f_warp[i])
+	    f.write(str(f_warp[i]))
             f.write(',')
-            f.write(b_warp[i])
+            f.write(str(b_warp[i]))
             f.write('\n')
 
 
