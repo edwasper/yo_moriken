@@ -56,6 +56,11 @@ print("Tare done! Add weight now...")
 
 f_plot_list = []
 b_plot_list = []
+f_arg = 0
+b_arg = 0
+
+wari = 0
+wari_list = []
 plot_count = 0
 bad_list = []
 
@@ -65,21 +70,24 @@ bad_max = 100
 WARP = 2
 warp_thres = 0
 SLOUCH = 1
-slouch_thres = 2000
+slouch_thres = 0.5
 try:
     while plot_count < count_max :
         f_arg = abs(f_hx.get_weight(1))
         b_arg = abs(b_hx.get_weight(1))
         f_plot_list.append(f_arg)
         b_plot_list.append(b_arg)
+        wari = (b_arg-f_arg)/b_arg
+        wari_list.append(wari)
 
-        print("front_roadcell:",f_plot_list[plot_count])
-        print("back_roadcell:",b_plot_list[plot_count])
+        print("front_roadcell:",f_arg)
+        print("back_roadcell:",b_arg)
+        print("wari:",wari)
 
-        if (b_plot_list[plot_count]-f_plot_list[plot_count]<warp_thres):
+        if (wari<warp_thres):
             print("warp posture!")
             bad_list.append(WARP)
-        elif  (b_plot_list[plot_count]-f_plot_list[plot_count]<slouch_thres):
+        elif  (wari<slouch_thres):
             print("slouch posture!")
             bad_list.append(SLOUCH)
         else:
@@ -115,6 +123,8 @@ finally :
             f.write(str(b_plot_list[i]))
             f.write(',')
             f.write(str(bad_list[i]))
+            f.write(',')
+            f.write(str(wari_list[i]))
             f.write('\n')
 
 
