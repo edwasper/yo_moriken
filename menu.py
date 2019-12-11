@@ -1,5 +1,10 @@
 import Tkinter as tk
 from dummy import DummyApp
+from add import Add
+from setting import Setting
+from setuser import SetUser
+
+
 class FrameBase(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -12,6 +17,19 @@ class FrameBase(tk.Tk):
         self.frame.pack_forget() # delete currrent frame
         self.frame = frame(self)
         self.frame.pack(expand=True, fill="both") # make new frame
+
+
+    def changeAddUser(self):
+        self.frame.pack_foget()
+        self.frame = Add(self)
+        self.frame.pack(expand=True, fill="both")
+
+
+    def changeSetUser(self,name):
+        self.frame.pack_foget()
+        self.frame = SetUser(self,user=name)
+        self.frame.pack(expand=True, fill="both")
+
 
     def backToStart(self):
         self.frame.pack_forget()
@@ -26,7 +44,7 @@ class StartPageFrame(tk.Frame):
         self.grid(column=0, row=0, sticky=tk.NSEW)
 
         self.Applist = [
-                    [ [DummyApp, "Not Registerd"], [DummyApp, "Not Registerd"] ], 
+                    [ [Setting, "Setting"], [DummyApp, "Not Registerd"] ], 
                     [ [DummyApp, "Not Registerd"], [DummyApp, "Not Registerd"] ]
                     ]
 
