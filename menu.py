@@ -1,8 +1,6 @@
 import Tkinter as tk
 from dummy import DummyApp
-from add import Add
-from setting import Setting
-from setuser import SetUser
+from setting import *
 
 
 class FrameBase(tk.Tk):
@@ -17,19 +15,6 @@ class FrameBase(tk.Tk):
         self.frame.pack_forget() # delete currrent frame
         self.frame = frame(self)
         self.frame.pack(expand=True, fill="both") # make new frame
-
-
-    def changeAddUser(self):
-        self.frame.pack_foget()
-        self.frame = Add(self)
-        self.frame.pack(expand=True, fill="both")
-
-
-    def changeSetUser(self,name):
-        self.frame.pack_foget()
-        self.frame = SetUser(self,user=name)
-        self.frame.pack(expand=True, fill="both")
-
 
     def backToStart(self):
         self.frame.pack_forget()
@@ -63,7 +48,7 @@ class StartPageFrame(tk.Frame):
             for c in range(2):
                 btn = tk.Button(
                         master=self,
-                        wraplength=5,
+                        wraplength=150,
                         justify=tk.LEFT,
                         text=self.Applist[r-1][c][1],
                         font=("Migu 1M", 16),
