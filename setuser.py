@@ -32,7 +32,8 @@ class SetUser(tk.Frame):
  
 	self.f_hx.tare() 
 	self.b_hx.tare() 
- 
+
+        self.posture = ["slouch","warp"] 
 	self.keisu = 100 
         
         self.create_widget()
@@ -65,47 +66,47 @@ class SetUser(tk.Frame):
                 command=self.setPosturelam(1))
         Wbtn.pack()
     def setPosturelam(self,pos):
-        return lambda :setPosture(pos)
+        return lambda :self.setPosture(pos)
 
     def setPosture(self,pos):
-    try:
-	lbl = tk.Label(self, text="Please posture "+posture[i], height=5, font=("Migu 1M",20))
+	lbl = tk.Label(self, text="Please posture "+self.posture[pos], height=5, font=("Migu 1M",20))
 	lbl.pack()
 
-        plot_count = 0 
+	plot_count = 0 
 	f_list = []
 	b_list = []
-	while plot_count<self.keisu :
-	    f_arg = abs(self.f_hx.get_weight(1))
-	    b_arg = abs(self.b_hx.get_weight(1))
-	    f_list.append(f_arg)
-	    b_list.append(b_arg)
 
-	    print("front_roadcell:",f_list[plot_count])
-	    print("back_roadcell:",b_list[plot_count])
-	    plot_count += 1
-	    print(plot_count)
-	    self.f_hx.power_down()
-	    self.b_hx.power_down()
-	    self.f_hx.power_up()
-	    self.b_hx.power_up()
-    except :
-	pass
-    finally :
-	f_ave = np.mean(f_list)
-	b_ave = np.mean(b_list)
-	if b_ave>f_ave:
-	    wari = ((b_ave-f_ave)/b_ave)
-	elif b_ave<f_ave:
-	    wari = (-1*(f_ave-b_ave)/f_ave)
-	else:
-	    wari = 0
+	try:
+	    while plot_count<self.keisu :
+		f_arg = abs(self.f_hx.get_weight(1))
+		b_arg = abs(self.b_hx.get_weight(1))
+		f_list.append(f_arg)
+		b_list.append(b_arg)
 
-	lbl.pack_forget()
-        self.master.users[pos] = wari
-	cleanAndExit()
-        self.master.backToStart()
+		print("front_roadcell:",f_list[plot_count])
+		print("back_roadcell:",b_list[plot_count])
+		plot_count += 1
+		print(plot_count)
+		self.f_hx.power_down()
+		self.b_hx.power_down()
+		self.f_hx.power_up()
+		self.b_hx.power_up()
+	except :
+	    pass
+	finally :
+	    f_ave = np.mean(f_list)
+	    b_ave = np.mean(b_list)
+	    if b_ave>f_ave:
+		wari = ((b_ave-f_ave)/b_ave)
+	    elif b_ave<f_ave:
+		wari = (-1*(f_ave-b_ave)/f_ave)
+	    else:
+		wari = 0
+
+	    lbl.pack_forget()
+	    self.master.users[self.master.select][pos] = wari
+	    GPIO.cleanup()
+	    self.master.backToStart()
 
 
-
-		
+		    
